@@ -11,7 +11,7 @@ builds:
     binary: accessory
     ldflags:
       - -s -w
-      - -X github.com/masaushi/accessory/cmd.Version={{.Version}}
+      - -X github.com/genme/accessory/cmd.Version={{.Version}}
     env:
       - CGO_ENABLED=0
     goos:
