@@ -9,9 +9,17 @@ func Type(typeName string) Option {
 	}
 }
 
+// ForceGetters sets force generation for getters
 func ForceGetters(getters bool) Option {
 	return func(g *generator) {
 		g.getters = getters
+	}
+}
+
+// ForceSetters sets force generation for setters
+func ForceSetters(setters bool) Option {
+	return func(g *generator) {
+		g.setters = setters
 	}
 }
 

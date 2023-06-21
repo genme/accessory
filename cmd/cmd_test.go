@@ -22,6 +22,10 @@ func TestExecute(t *testing.T) {
 			cmd:    "accessory -type Tester testdata/getter",
 			output: "testdata/getter/tester_accessor.go",
 		},
+		"GetterSetterForce": {
+			cmd:    "accessory -getters -setters -type Tester testdata/getter_force",
+			output: "testdata/getter_force/tester_accessor.go",
+		},
 		"Setter": {
 			cmd:    "accessory -type Tester testdata/setter",
 			output: "testdata/setter/tester_accessor.go",

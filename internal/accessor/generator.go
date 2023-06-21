@@ -21,6 +21,7 @@ type generator struct {
 	receiver string
 	lock     string
 	getters  bool
+	setters  bool
 }
 
 type methodGenParameters struct {
@@ -65,20 +66,17 @@ func Generate(fs afero.Fs, pkg *Package, options ...Option) error {
 		}
 
 		for _, field := range st.Fields {
-			if field.Tag == nil {
-				continue
-			}
-
 			params := g.setupParameters(pkg, st, field)
 
-			if field.Tag.Getter != nil || g.getters {
+			if (field.Tag != nil && field.Tag.Getter != nil) || g.getters {
 				getter, err := g.generateGetter(params)
 				if err != nil {
 					return err
 				}
 				accessors = append(accessors, getter)
 			}
-			if field.Tag.Setter != nil {
+
+			if (field.Tag != nil && field.Tag.Setter != nil) || g.setters {
 				setter, err := g.generateSetter(params)
 				if err != nil {
 					return err
@@ -86,9 +84,11 @@ func Generate(fs afero.Fs, pkg *Package, options ...Option) error {
 				accessors = append(accessors, setter)
 			}
 
-			if splitted := strings.Split(strings.TrimPrefix(params.Type, "*"), "."); len(splitted) > 1 {
-				otherPackage := splitted[0]
-				imports = append(imports, importMap[otherPackage])
+			if len(accessors) > 0 {
+				if splitted := strings.Split(strings.TrimPrefix(params.Type, "*"), "."); len(splitted) > 1 {
+					otherPackage := splitted[0]
+					imports = append(imports, importMap[otherPackage])
+				}
 			}
 		}
 	}
@@ -202,16 +202,16 @@ func (g *generator) receiverName(structName string) string {
 }
 
 func (g *generator) methodNames(field *Field) (getter, setter string) {
-	if getterName := field.Tag.Getter; getterName != nil && *getterName != "" {
-		getter = *getterName
-	} else {
-		getter = strcase.UpperCamelCase(field.Name)
-	}
+	getter = strcase.UpperCamelCase(field.Name)
+	setter = strcase.UpperCamelCase("Set_" + field.Name)
 
-	if setterName := field.Tag.Setter; setterName != nil && *setterName != "" {
-		setter = *setterName
-	} else {
-		setter = strcase.UpperCamelCase("Set_" + field.Name)
+	if field.Tag != nil {
+		if getterName := field.Tag.Getter; getterName != nil && *getterName != "" {
+			getter = *getterName
+		}
+		if setterName := field.Tag.Setter; setterName != nil && *setterName != "" {
+			setter = *setterName
+		}
 	}
 
 	return getter, setter

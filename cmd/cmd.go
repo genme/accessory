@@ -37,7 +37,8 @@ func Execute(fs afero.Fs, args []string) {
 	version := flags.Bool("version", false, "show the version of accessory")
 	typeName := flags.String("type", "", "type name; must be set")
 	lockName := flags.String("lock", "", "lock name")
-	getters := flags.Bool("getters", false, "generate getters by default")
+	getters := flags.Bool("getters", false, "generate getters forcefully")
+	setters := flags.Bool("setters", false, "generate setters forcefully")
 	receiver := flags.String("receiver", "", "receiver name; default first letter of type name")
 	output := flags.String("output", "", "output file name; default <type_name>_accessor.go")
 
@@ -83,6 +84,7 @@ func Execute(fs afero.Fs, args []string) {
 		accessor.Receiver(*receiver),
 		accessor.Lock(*lockName),
 		accessor.ForceGetters(*getters),
+		accessor.ForceSetters(*setters),
 	}
 
 	if err = accessor.Generate(fs, pkg, options...); err != nil {
