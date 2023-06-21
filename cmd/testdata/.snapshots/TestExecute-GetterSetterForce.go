@@ -2,7 +2,7 @@
 
 package test
 
-func (t *Tester) Field1() string {
+func (t *Tester) GetField1() string {
 	if t == nil {
 		return ""
 	}

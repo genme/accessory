@@ -23,6 +23,13 @@ func ForceSetters(setters bool) Option {
 	}
 }
 
+// GettersPrefix sets prefix for getter methods
+func GettersPrefix(prefix string) Option {
+	return func(g *generator) {
+		g.gettersPrefix = prefix
+	}
+}
+
 // Output sets output file path to genarator.
 func Output(output string) Option {
 	return func(g *generator) {

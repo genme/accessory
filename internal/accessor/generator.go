@@ -15,13 +15,14 @@ import (
 )
 
 type generator struct {
-	writer   *writer
-	typ      string
-	output   string
-	receiver string
-	lock     string
-	getters  bool
-	setters  bool
+	writer        *writer
+	typ           string
+	output        string
+	receiver      string
+	lock          string
+	getters       bool
+	setters       bool
+	gettersPrefix string
 }
 
 type methodGenParameters struct {
@@ -202,7 +203,7 @@ func (g *generator) receiverName(structName string) string {
 }
 
 func (g *generator) methodNames(field *Field) (getter, setter string) {
-	getter = strcase.UpperCamelCase(field.Name)
+	getter = strcase.UpperCamelCase(fmt.Sprintf("%s_%s", g.gettersPrefix, field.Name))
 	setter = strcase.UpperCamelCase("Set_" + field.Name)
 
 	if field.Tag != nil {
