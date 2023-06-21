@@ -3,17 +3,15 @@ package accessor
 import (
 	"bytes"
 	"fmt"
+	"github.com/spf13/afero"
+	"github.com/stoewer/go-strcase"
 	"go/types"
+	"golang.org/x/tools/go/packages"
 	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
 	"text/template"
-
-	"github.com/spf13/afero"
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-	"golang.org/x/tools/go/packages"
 )
 
 type generator struct {
@@ -22,6 +20,7 @@ type generator struct {
 	output   string
 	receiver string
 	lock     string
+	getters  bool
 }
 
 type methodGenParameters struct {
@@ -72,7 +71,7 @@ func Generate(fs afero.Fs, pkg *Package, options ...Option) error {
 
 			params := g.setupParameters(pkg, st, field)
 
-			if field.Tag.Getter != nil {
+			if field.Tag.Getter != nil || g.getters {
 				getter, err := g.generateGetter(params)
 				if err != nil {
 					return err
@@ -206,13 +205,13 @@ func (g *generator) methodNames(field *Field) (getter, setter string) {
 	if getterName := field.Tag.Getter; getterName != nil && *getterName != "" {
 		getter = *getterName
 	} else {
-		getter = cases.Title(language.Und, cases.NoLower).String(field.Name)
+		getter = strcase.UpperCamelCase(field.Name)
 	}
 
 	if setterName := field.Tag.Setter; setterName != nil && *setterName != "" {
 		setter = *setterName
 	} else {
-		setter = "Set" + cases.Title(language.Und, cases.NoLower).String(field.Name)
+		setter = strcase.UpperCamelCase("Set_" + field.Name)
 	}
 
 	return getter, setter

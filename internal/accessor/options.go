@@ -9,6 +9,12 @@ func Type(typeName string) Option {
 	}
 }
 
+func ForceGetters(getters bool) Option {
+	return func(g *generator) {
+		g.getters = getters
+	}
+}
+
 // Output sets output file path to genarator.
 func Output(output string) Option {
 	return func(g *generator) {

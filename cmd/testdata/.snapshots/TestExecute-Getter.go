@@ -16,3 +16,10 @@ func (t *Tester) GetSecondField() int32 {
 	return t.field2
 }
 
+func (t *Tester) FieldInSnakeCase() *bool {
+	if t == nil {
+		return nil
+	}
+	return t.field_in_snake_case
+}
+
