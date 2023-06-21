@@ -1,4 +1,4 @@
-module github.com/masaushi/accessory
+module github.com/genme/accessory
 
 go 1.19
 
