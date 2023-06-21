@@ -3,9 +3,9 @@
 package test
 
 import (
-	"github.com/masaushi/accessory/cmd/testdata/import_packages/sub1"
-	"github.com/masaushi/accessory/cmd/testdata/import_packages/sub2"
-	"github.com/masaushi/accessory/cmd/testdata/import_packages/sub3"
+	"github.com/genme/accessory/cmd/testdata/import_packages/sub1"
+	"github.com/genme/accessory/cmd/testdata/import_packages/sub2"
+	"github.com/genme/accessory/cmd/testdata/import_packages/sub3"
 	"time"
 )
 
